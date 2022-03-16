@@ -1,4 +1,4 @@
-namespace Data;
+namespace Mascotas.Data;
 
 public interface IRepository<T>
 {

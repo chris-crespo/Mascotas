@@ -1,7 +1,7 @@
 .PHONY: all run
 
 all:
-	rm -rf **/{obj,bin}
+	rm -rf **/**/{obj,bin}
 	dotnet run --project src/Console
 
 check: 

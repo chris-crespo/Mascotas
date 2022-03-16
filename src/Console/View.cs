@@ -59,6 +59,62 @@ public class View
         }
     }   
 
+    public char TryGetChar(string prompt, string options, char def = 'H')
+    {
+        var msg = $"{prompt.Trim()} ({def}): ";
+        while (true)
+        {
+            Write(msg);
+            var input = ReadLine();
+            if (input.ToLower().Trim() == CANCELINPUT)
+                throw new Exception("Entrada cancelada");
+            if (input == "")
+                input = def.ToString();
+
+            try
+            {
+                if (input.Length != 1) 
+                    throw new Exception();
+
+                var c = input.ToUpper()[0];
+                if (!options.Contains(c))
+                    throw new Exception();
+
+                return c;
+            }
+            catch (Exception)
+            {
+                Show($"Error: '{input}' no se encuentra entre las opciones {options}", ConsoleColor.DarkRed);
+            }
+        }
+    }
+
+    public DateTime TryGetDate(string prompt)
+    {
+        var msg = $"{prompt} (mm/dd/yyyy): ";
+        while (true)
+        {
+            Write(msg); 
+
+            var input = ReadLine();
+            if (input.ToLower().Trim() == CANCELINPUT)
+                throw new Exception("Entrada cancelada");
+
+            try
+            {
+                var date = DateTime.Parse(input);
+                if (date > DateTime.Now)
+                    throw new Exception();
+
+                return date;
+            }
+            catch (Exception)
+            {
+                if (input != "")
+                    Show($"Error: '{input}' no una fecha válida", ConsoleColor.DarkRed);
+            }
+        }
+    }
 
     public int TryGetIntInRange(int lower, int upper, string prompt)
     {

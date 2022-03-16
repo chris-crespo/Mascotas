@@ -1,16 +1,28 @@
-﻿namespace Models;
+﻿namespace Mascotas.Models;
 
-public class Owner
+public class Member
 {
+    public Guid   ID     { get; }
     public string Name   { get; }
-    public string Gender { get; }
+    public char   Gender { get; }
 }
 
 public class Pet
 {
-    public string Name      { get; }
-    public string Gender    { get; }
-    public string Specie    { get; }
-    public Date   Birthdate { get; }
-    public Owner  Owner     { get; }
+    public string   Name      { get; set; }
+    public char     Gender    { get; set; }
+    public Specie   Specie    { get; set; }
+    public DateTime Birthdate { get; set; }
+    public Member   Member    { get; set; }
+
+    public override string ToString()
+        => $"{Name},{Gender},{Specie},{Birthdate},{Member.Name}";
+}
+
+public class Specie
+{
+    public Guid   ID   { get; }
+    public string Name { get; }
+
+    public override string ToString() => Name;
 }
