@@ -8,7 +8,7 @@ public class PetRepo : IRepository<Pet>
 
     public void Save(List<Pet> pets) 
     {
-        var header = "Nombre,Sexo,Especie,Nacimiento,Dueño";
+        var header = "ID,Nombre,Sexo,Especie,Nacimiento,Dueño";
         var data   = new List<string>() { header };
         pets.ForEach(pet => data.Add(pet.ToString())); 
         File.WriteAllLines(_file, data);
