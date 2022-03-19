@@ -18,7 +18,7 @@ public class Controller
             { "Baja de Socio",    RemoveMember },
             { "Alta de Mascota",  AddPet },
             { "Baja de Mascota",  () => WriteLine("BM") },
-            { "Añadir Especie",   () => WriteLine("AE") },
+            { "Añadir Especie",   AddSpecie },
             { "Eliminar Especie", () => WriteLine("AE") },
             { "Comprar Mascota",  () => WriteLine("CM") },
             { "Mostrar Mascotas", () => WriteLine("MM") }
@@ -91,6 +91,23 @@ public class Controller
                 memberID:  null
             );
             _manager.AddPet(pet);
+        }
+        catch (Exception e)
+        {
+            _view.Show($"{e.Message}", ConsoleColor.DarkRed);
+        }
+    }
+
+
+    private void AddSpecie()
+    {
+        try
+        {
+            var specie = new Specie(
+                id:   Guid.NewGuid(),
+                name: _view.TryGetInput<string>("Nombre")
+            );
+            _manager.AddSpecie(specie);
         }
         catch (Exception e)
         {

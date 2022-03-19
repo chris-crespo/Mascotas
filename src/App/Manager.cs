@@ -32,7 +32,7 @@ public class Manager
 
     public void RemoveMember(Member m)
     {
-        Members.RemoveAll(member => member.ID.Equals(m.ID));
+        Members.Remove(m);
         MemberRepo.Save(Members);
     }
 
@@ -44,7 +44,13 @@ public class Manager
 
     public void RemovePet(Pet p)
     {
-        Pets.RemoveAll(pet => pet.ID.Equals(p.ID));
+        Pets.Remove(p);
         PetRepo.Save(Pets);
+    }
+
+    public void AddSpecie(Specie s)
+    {
+        Species.Add(s);
+        SpecieRepo.Save(Species);
     }
 }
