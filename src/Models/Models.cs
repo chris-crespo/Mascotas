@@ -55,12 +55,12 @@ public class Pet
             gender:    fields[2][0],
             specieID:  Guid.Parse(fields[3]),
             birthdate: DateTime.Parse(fields[4]),
-            memberID:  Guid.Parse(fields[5])
+            memberID:  fields.Length == 6 ? Guid.Parse(fields[5]) : null
         );
     }
 
     public override string ToString() 
-        => $"{ID},{Name},{Gender},{SpecieID},{Birthdate},{MemberID}";
+        => $"{ID},{Name},{Gender},{SpecieID},{Birthdate}" + (MemberID != null ? $",{MemberID}" : "");
 }
 
 public class Specie
