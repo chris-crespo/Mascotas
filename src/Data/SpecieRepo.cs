@@ -2,22 +2,22 @@ using Mascotas.Models;
 
 namespace Mascotas.Data;
 
-public class MemberRepo : IRepository<Member>
+public class SpecieRepo : IRepository<Specie>
 {
     string _file = "members.csv";
 
-    public void Save(List<Member> members)
+    public void Save(List<Specie> species)
     {
         var header = "ID,Nombre,Sexo";
         var data   = new List<string>() { header };
-        members.ForEach(member => data.Add(member.ToString()));
+        species.ForEach(specie => data.Add(specie.ToString()));
         File.WriteAllLines(_file, data);
     }
 
-    public List<Member> Read()
+    public List<Specie> Read()
         => File.ReadAllLines(_file)
             .Skip(1)
             .Where(line => line.Length > 0)
-            .Select(Member.Parse)
+            .Select(Specie.Parse)
             .ToList();
 }
