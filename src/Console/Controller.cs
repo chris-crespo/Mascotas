@@ -8,20 +8,23 @@ public class Controller
     private View _view;
     private Manager _manager;
     private Dictionary<string, Action> _useCases;
+    private Mapper _mapper;
 
-    public Controller(View view, Manager manager)
+    public Controller(View view, Manager manager, Mapper mapper)
     {
         _view = view;
         _manager = manager;
+        _mapper = mapper;
         _useCases = new Dictionary<string, Action>() {
             { "Alta de Socio",    AddMember },
             { "Baja de Socio",    RemoveMember },
             { "Alta de Mascota",  AddPet },
-            { "Baja de Mascota",  () => WriteLine("BM") },
+            { "Baja de Mascota",  RemovePet },
             { "Añadir Especie",   AddSpecie },
-            { "Eliminar Especie", () => WriteLine("AE") },
-            { "Comprar Mascota",  () => WriteLine("CM") },
-            { "Mostrar Mascotas", () => WriteLine("MM") }
+            { "Eliminar Especie", RemoveSpecie },
+            { "Mostrar Especies", ShowSpecies },
+            { "Comprar Mascota",  BuyPet },
+            { "Mostrar Mascotas", ShowPets }
         };
     }
 
@@ -66,12 +69,16 @@ public class Controller
     {
         try
         {
-            var member = _view.TryGetListItem("Socios", _manager.Members, "Selecciona un socio"); 
+            var members = _manager.Members;
+            if (members.Count == 0)
+                throw new Exception("No hay ningún socio registrado");
+
+            var member = _view.TryGetListItem("Socios", members, "Selecciona un socio"); 
             _manager.RemoveMember(member);
         }
         catch (Exception e)
         {
-            _view.Show($"UC: {e.Message}");
+            _view.Show(e.Message, ConsoleColor.DarkRed);
         }
     }
 
@@ -94,10 +101,32 @@ public class Controller
         }
         catch (Exception e)
         {
-            _view.Show($"{e.Message}", ConsoleColor.DarkRed);
+            _view.Show(e.Message, ConsoleColor.DarkRed);
         }
     }
 
+    private void RemovePet() 
+    {
+        try
+        {
+            var pets = _manager.Pets;
+            if (pets.Count == 0)
+                throw new Exception("No hay ninguna mascota registrada");
+
+            var members = _manager.Members;
+            var species = _manager.Species;
+            var pet = _view.TryGetListItem(
+                "Mascotas", 
+                _mapper.mapPets(pets, members, species) , 
+                "Selecciona una mascota"
+            ); 
+            _manager.RemovePet(pet.ID);
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
 
     private void AddSpecie()
     {
@@ -111,7 +140,83 @@ public class Controller
         }
         catch (Exception e)
         {
-            _view.Show($"{e.Message}", ConsoleColor.DarkRed);
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
+
+    private void RemoveSpecie() 
+    {
+        try
+        {
+            var species = _manager.Species;
+            if (species.Count == 0)
+                throw new Exception("No hay especies registradas");
+
+            var specie = _view.TryGetListItem("Especies", species, "Selecciona una especie"); 
+            var pets = _manager.GetPetsOfSpecie(specie);
+            if (pets.Count != 0)
+                throw new Exception("Existen mascotas registradas de la especie seleccionada");
+
+            _manager.RemoveSpecie(specie);
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
+
+    private void ShowSpecies() 
+    {
+        try
+        {
+            var species = _manager.Species;
+            if (species.Count == 0)
+                throw new Exception("No hay especies registradas");
+
+            _view.ShowList("Especies", species);
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
+
+    private void BuyPet()
+    {
+        try
+        {
+            if (_manager.Members.Count == 0)
+                throw new Exception("No hay socios registrados");
+
+            var pets = _manager.GetAvailablePets();
+            if (pets.Count == 0)
+                throw new Exception("No hay mascotas disponibles");
+
+            var pet    = _view.TryGetListItem("Mascotas", pets, "Selecciona una mascota");
+            var member = _view.TryGetListItem("Socios", _manager.Members, "Selecciona un socio");
+            _manager.ChangePetOwner(pet, member);
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
+
+    private void ShowPets() 
+    {
+        try
+        {
+            var pets = _manager.Pets;
+            if (pets.Count == 0)
+                throw new Exception("No hay mascotas registradas");
+
+            var members = _manager.Members;
+            var species = _manager.Species;
+            _view.ShowList("Mascotas", _mapper.mapPets(pets, members, species));
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
         }
     }
 }

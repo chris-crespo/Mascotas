@@ -34,7 +34,7 @@ public class Pet
     public char     Gender    { get; }
     public Guid     SpecieID  { get; }
     public DateTime Birthdate { get; }
-    public Guid?    MemberID  { get; }
+    public Guid?    MemberID  { get; set; }
 
     public Pet(Guid id, string name, char gender, Guid specieID, DateTime birthdate, Guid? memberID)
     {

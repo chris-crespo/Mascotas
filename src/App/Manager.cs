@@ -33,7 +33,9 @@ public class Manager
     public void RemoveMember(Member m)
     {
         Members.Remove(m);
+        Pets.RemoveAll(pet => pet.MemberID.Equals(m.ID));
         MemberRepo.Save(Members);
+        PetRepo.Save(Pets);
     }
 
     public void AddPet(Pet p)
@@ -42,9 +44,9 @@ public class Manager
         PetRepo.Save(Pets);
     }
 
-    public void RemovePet(Pet p)
+    public void RemovePet(Guid id)
     {
-        Pets.Remove(p);
+        Pets.RemoveAll(p => p.ID.Equals(id));
         PetRepo.Save(Pets);
     }
 
@@ -52,5 +54,23 @@ public class Manager
     {
         Species.Add(s);
         SpecieRepo.Save(Species);
+    }
+
+    public void RemoveSpecie(Specie s)
+    {
+        Species.Remove(s);
+        SpecieRepo.Save(Species);
+    }
+
+    public List<Pet> GetPetsOfSpecie(Specie s)
+        => Pets.Where(pet => pet.SpecieID.Equals(s.ID)).ToList();
+
+    public List<Pet> GetAvailablePets()
+        => Pets.Where(pet => pet.MemberID == null).ToList();
+
+    public void ChangePetOwner(Pet pet, Member member)
+    {
+        pet.MemberID = member.ID;
+        PetRepo.Save(Pets);
     }
 }
