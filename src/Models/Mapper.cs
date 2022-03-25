@@ -11,4 +11,17 @@ public class Mapper
 
     public List<PetDTO> mapPets(List<Pet> pets, List<Member> members, List<Specie> species)
         => pets.Select(pet => mapPet(pet, members, species)).ToList();
+
+    public MemberDTO mapMember(Member member)
+        => new MemberDTO(member.ID, member.Name, member.Gender);
+
+    public List<MemberDTO> mapMembers(List<Member> members)
+        => members.Select(mapMember).ToList();
+
+    public SpecieDTO mapSpecie(Specie specie) 
+        => new SpecieDTO(specie.ID, specie.Name);
+
+    public List<SpecieDTO> mapSpecies(List<Specie> species)
+        => species.Select(mapSpecie).ToList();
+
 }

@@ -73,8 +73,11 @@ public class Controller
             if (members.Count == 0)
                 throw new Exception("No hay ningún socio registrado");
 
-            var member = _view.TryGetListItem("Socios", members, "Selecciona un socio"); 
-            _manager.RemoveMember(member);
+            var member = _view.TryGetListItem(
+                "Socios", 
+                _mapper.mapMembers(members), 
+                "Selecciona un socio"); 
+            _manager.RemoveMemberById(member.ID);
         }
         catch (Exception e)
         {
@@ -118,9 +121,8 @@ public class Controller
             var pet = _view.TryGetListItem(
                 "Mascotas", 
                 _mapper.mapPets(pets, members, species) , 
-                "Selecciona una mascota"
-            ); 
-            _manager.RemovePet(pet.ID);
+                "Selecciona una mascota"); 
+            _manager.RemovePetById(pet.ID);
         }
         catch (Exception e)
         {
@@ -152,12 +154,16 @@ public class Controller
             if (species.Count == 0)
                 throw new Exception("No hay especies registradas");
 
-            var specie = _view.TryGetListItem("Especies", species, "Selecciona una especie"); 
-            var pets = _manager.GetPetsOfSpecie(specie);
+            var specie = _view.TryGetListItem(
+                "Especies", 
+                _mapper.mapSpecies(species), 
+                "Selecciona una especie"); 
+
+            var pets = _manager.GetPetsWithSpecieID(specie.ID);
             if (pets.Count != 0)
                 throw new Exception("Existen mascotas registradas de la especie seleccionada");
 
-            _manager.RemoveSpecie(specie);
+            _manager.RemoveSpecieById(specie.ID);
         }
         catch (Exception e)
         {
@@ -192,9 +198,17 @@ public class Controller
             if (pets.Count == 0)
                 throw new Exception("No hay mascotas disponibles");
 
-            var pet    = _view.TryGetListItem("Mascotas", pets, "Selecciona una mascota");
-            var member = _view.TryGetListItem("Socios", _manager.Members, "Selecciona un socio");
-            _manager.ChangePetOwner(pet, member);
+            var members = _manager.Members;
+            var species = _manager.Species;
+            var pet = _view.TryGetListItem(
+                "Mascotas", 
+                _mapper.mapPets(pets, members, species), 
+                "Selecciona una mascota");
+            var member = _view.TryGetListItem(
+                "Socios", 
+                _mapper.mapMembers(members), 
+                "Selecciona un socio");
+            _manager.ChangePetOwnerId(pet, member.ID);
         }
         catch (Exception e)
         {
