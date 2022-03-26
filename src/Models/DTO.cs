@@ -36,7 +36,7 @@ public class PetDTO
     public int calcAge() => DateTime.Today.Year - Birthdate.Year;
 
     public override string ToString()
-        => $"{Name}, {Specie}, {calcAge()}, ({Member ?? "Sin dueño"})";
+        => $"{Name}, {Specie}, {calcAge()} años, ({Member ?? "Sin dueño"})";
 }
 
 public class SpecieDTO

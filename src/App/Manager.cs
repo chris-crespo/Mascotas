@@ -68,9 +68,9 @@ public class Manager
     public List<Pet> GetAvailablePets()
         => Pets.Where(pet => pet.MemberID == null).ToList();
 
-    public void ChangePetOwnerId(Pet pet, Guid id)
+    public void ChangePetOwner(Guid petID, Guid ownerID)
     {
-        pet.MemberID = member.ID;
+        Pets.Find(p => p.ID.Equals(petID)).MemberID = ownerID;
         PetRepo.Save(Pets);
     }
 }

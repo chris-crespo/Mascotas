@@ -75,7 +75,7 @@ public class Controller
 
             var member = _view.TryGetListItem(
                 "Socios", 
-                _mapper.mapMembers(members), 
+                _mapper.MapMembers(members), 
                 "Selecciona un socio"); 
             _manager.RemoveMemberById(member.ID);
         }
@@ -89,14 +89,15 @@ public class Controller
     {
         try
         {
-            if (_manager.Species.Count == 0)
+            var species = _mapper.MapSpecies(_manager.Species);
+            if (species.Count == 0)
                 throw new Exception("No hay ninguna especie registrada.");
 
             var pet = new Pet(
                 id:        Guid.NewGuid(),
                 name:      _view.TryGetInput<string>("Nombre"),
                 gender:    _view.TryGetChar("Sexo", "HM", 'H'),
-                specieID:  _view.TryGetListItem("Especies", _manager.Species, "Selecciona una especie").ID,
+                specieID:  _view.TryGetListItem("Especies", species, "Selecciona una especie").ID,
                 birthdate: _view.TryGetDate("Fecha de Nacimiento"),
                 memberID:  null
             );
@@ -120,7 +121,7 @@ public class Controller
             var species = _manager.Species;
             var pet = _view.TryGetListItem(
                 "Mascotas", 
-                _mapper.mapPets(pets, members, species) , 
+                _mapper.MapPets(pets, members, species) , 
                 "Selecciona una mascota"); 
             _manager.RemovePetById(pet.ID);
         }
@@ -156,7 +157,7 @@ public class Controller
 
             var specie = _view.TryGetListItem(
                 "Especies", 
-                _mapper.mapSpecies(species), 
+                _mapper.MapSpecies(species), 
                 "Selecciona una especie"); 
 
             var pets = _manager.GetPetsWithSpecieID(specie.ID);
@@ -179,7 +180,7 @@ public class Controller
             if (species.Count == 0)
                 throw new Exception("No hay especies registradas");
 
-            _view.ShowList("Especies", species);
+            _view.ShowList("Especies", _mapper.MapSpecies(species));
         }
         catch (Exception e)
         {
@@ -202,13 +203,13 @@ public class Controller
             var species = _manager.Species;
             var pet = _view.TryGetListItem(
                 "Mascotas", 
-                _mapper.mapPets(pets, members, species), 
+                _mapper.MapPets(pets, members, species), 
                 "Selecciona una mascota");
             var member = _view.TryGetListItem(
                 "Socios", 
-                _mapper.mapMembers(members), 
+                _mapper.MapMembers(members), 
                 "Selecciona un socio");
-            _manager.ChangePetOwnerId(pet, member.ID);
+            _manager.ChangePetOwner(pet.ID, member.ID);
         }
         catch (Exception e)
         {
@@ -226,7 +227,7 @@ public class Controller
 
             var members = _manager.Members;
             var species = _manager.Species;
-            _view.ShowList("Mascotas", _mapper.mapPets(pets, members, species));
+            _view.ShowList("Mascotas", _mapper.MapPets(pets, members, species));
         }
         catch (Exception e)
         {

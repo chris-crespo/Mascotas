@@ -2,26 +2,26 @@ namespace Mascotas.Models;
 
 public class Mapper
 {
-    public PetDTO mapPet(Pet pet, List<Member> members, List<Specie> species)
+    public PetDTO MapPet(Pet pet, List<Member> members, List<Specie> species)
     {
         var owner = members.Find(m => m.ID.Equals(pet.MemberID));
         var specie = species.Find(s => s.ID.Equals(pet.SpecieID));
         return new PetDTO(pet.ID, pet.Name, specie.Name, pet.Birthdate, owner?.Name);
     }
 
-    public List<PetDTO> mapPets(List<Pet> pets, List<Member> members, List<Specie> species)
-        => pets.Select(pet => mapPet(pet, members, species)).ToList();
+    public List<PetDTO> MapPets(List<Pet> pets, List<Member> members, List<Specie> species)
+        => pets.Select(pet => MapPet(pet, members, species)).ToList();
 
-    public MemberDTO mapMember(Member member)
+    public MemberDTO MapMember(Member member)
         => new MemberDTO(member.ID, member.Name, member.Gender);
 
-    public List<MemberDTO> mapMembers(List<Member> members)
-        => members.Select(mapMember).ToList();
+    public List<MemberDTO> MapMembers(List<Member> members)
+        => members.Select(MapMember).ToList();
 
-    public SpecieDTO mapSpecie(Specie specie) 
+    public SpecieDTO MapSpecie(Specie specie) 
         => new SpecieDTO(specie.ID, specie.Name);
 
-    public List<SpecieDTO> mapSpecies(List<Specie> species)
-        => species.Select(mapSpecie).ToList();
+    public List<SpecieDTO> MapSpecies(List<Specie> species)
+        => species.Select(MapSpecie).ToList();
 
 }

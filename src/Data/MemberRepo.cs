@@ -4,7 +4,7 @@ namespace Mascotas.Data;
 
 public class MemberRepo : IRepository<Member>
 {
-    string _file = "members.csv";
+    string _file = "data/members.csv";
 
     public void Save(List<Member> members)
     {
