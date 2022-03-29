@@ -18,25 +18,23 @@ public class MemberDTO
 
 public class PetDTO
 {
-    public   Guid ID { get; }
-    string   Name;
-    string   Specie;
-    DateTime Birthdate;
-    string?  Member;
+    public   Guid     ID      { get; }
+    public   string   Name    { get; }
+    public   string   Specie  { get; }
+    public   int      Age     { get; }
+    public   string?  Member  { get; }
 
     public PetDTO(Guid id, string name, string specie, DateTime birthdate, string? member)
     {
         ID        = id;
         Name      = name;
         Specie    = specie;
-        Birthdate = birthdate;
+        Age       = DateTime.Today.Year - birthdate.Year;
         Member    = member;
     }
 
-    public int calcAge() => DateTime.Today.Year - Birthdate.Year;
-
     public override string ToString()
-        => $"{Name}, {Specie}, {calcAge()} años, ({Member ?? "Sin dueño"})";
+        => $"{Name}, {Specie}, {Age} años, ({Member ?? "Sin dueño"})";
 }
 
 public class SpecieDTO

@@ -231,7 +231,11 @@ public class Controller
 
             var members = _manager.Members;
             var species = _manager.Species;
-            _view.ShowList("Mascotas", _mapper.MapPets(pets, members, species));
+            var mappedPets = _mapper.MapPets(pets, members, species);
+            _view.ShowList("Mascotas", 
+                mappedPets.OrderBy(p => p.Specie)
+                    .ThenBy(p => p.Age)
+                    .ToList());
         }
         catch (Exception e)
         {
