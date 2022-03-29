@@ -62,6 +62,10 @@ public class Manager
         SpecieRepo.Save(Species);
     }
 
+    public bool ExistsSpecie(string name) {
+        return Species.Find(s => s.Name.Equals(name)) != null;
+    }
+
     public List<Pet> GetPetsWithSpecieID(Guid id)
         => Pets.Where(pet => pet.SpecieID.Equals(id)).ToList();
 

@@ -139,6 +139,10 @@ public class Controller
                 id:   Guid.NewGuid(),
                 name: _view.TryGetInput<string>("Nombre")
             );
+
+            if (_manager.ExistsSpecie(specie.Name))
+                throw new Exception("Ya existe una especie con el mismo nombre");
+
             _manager.AddSpecie(specie);
         }
         catch (Exception e)
