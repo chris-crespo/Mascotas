@@ -2,9 +2,9 @@ namespace Mascotas.Models;
 
 public class MemberDTO
 {
-    public Guid ID { get; }
-    string Name;
-    char   Gender;
+    public Guid   ID     { get; }
+    public string Name   { get; }
+    public char   Gender { get; }
 
     public MemberDTO(Guid id, string name, char gender) 
     {
@@ -39,8 +39,8 @@ public class PetDTO
 
 public class SpecieDTO
 {
-    public Guid ID { get; }
-    string Name;
+    public Guid   ID   { get; }
+    public string Name { get; }
 
     public SpecieDTO(Guid id, string name)
     {
