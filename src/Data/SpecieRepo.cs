@@ -8,7 +8,7 @@ public class SpecieRepo : IRepository<Specie>
 
     public void Save(List<Specie> species)
     {
-        var header = "ID,Nombre,Sexo";
+        var header = "ID,Nombre";
         var data   = new List<string>() { header };
         species.ForEach(specie => data.Add(specie.ToString()));
         File.WriteAllLines(_file, data);

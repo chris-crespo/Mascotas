@@ -24,7 +24,8 @@ public class Controller
             { "Eliminar Especie", RemoveSpecie },
             { "Mostrar Especies", ShowSpecies },
             { "Comprar Mascota",  BuyPet },
-            { "Mostrar Mascotas", ShowPets }
+            { "Mostrar Mascotas", ShowPets },
+            { "Mostrar Socios",   ShowMembers }
         };
     }
 
@@ -221,6 +222,9 @@ public class Controller
         }
     }
 
+    private List<PetDTO> sortPets(List<PetDTO> pets) 
+        => pets.OrderBy(p => p.Specie).ThenBy(p => p.Age).ToList();
+
     private void ShowPets() 
     {
         try
@@ -232,10 +236,30 @@ public class Controller
             var members = _manager.Members;
             var species = _manager.Species;
             var mappedPets = _mapper.MapPets(pets, members, species);
-            _view.ShowList("Mascotas", 
-                mappedPets.OrderBy(p => p.Specie)
-                    .ThenBy(p => p.Age)
-                    .ToList());
+            _view.ShowList("Mascotas", sortPets(mappedPets));
+        }
+        catch (Exception e)
+        {
+            _view.Show(e.Message, ConsoleColor.DarkRed);
+        }
+    }
+
+    private void ShowMembers()
+    {
+        try
+        {
+            var members = _mapper.MapMembers(_manager.Members);
+            if (members.Count == 0)
+                throw new Exception("No hay socios registrados");
+
+            var member = _view.TryGetListItem("Socios", members, "Selecciona un socio");
+            var pets = _mapper.MapPets(
+                _manager.GetPetsByOwnerID(member.ID), _manager.Members, _manager.Species);
+            if (pets.Count == 0)
+                throw new Exception($"{member.Name} no tiene ninguna mascota registrada");
+
+            _view.Show("");
+            _view.ShowList("Mascotas", sortPets(pets));
         }
         catch (Exception e)
         {
